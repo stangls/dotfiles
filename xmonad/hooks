@@ -1,0 +1,50 @@
+#!/bin/bash
+
+function s {
+ ISRUNNING=`ps ax | grep -v grep | grep $1`
+ if [ "" =  "$ISRUNNING" ]
+ then
+ START="$1 $2"
+  echo starting $START
+ `$START > /dev/null &`
+ fi
+}
+
+case "$1" in
+  "startup")
+
+    # monitors, e.g. xrandr script
+    ~/bin/monitors.sh
+    # comppositing manager (for transparency)
+    s xcompmgr
+
+
+    s easystroke # start easystrok if not running
+    s "xscreensaver -no-splash"
+    s "gnome-keyring-daemon" #"--start --components=pkcs11"
+    # HINT: use the following command to disable mod4+p in gnome-settings to switch the monitor
+    #       gconftool -t bool -s /apps/gnome_settings_daemon/plugins/xrandr false
+
+    # gnome settiongs daemon
+    s "gnome-settings-daemon"
+    # disable gnome settings: super+p switches monitor
+    gconftool -t bool -s /apps/gnome_settings_daemon/plugins/xrandr false
+
+    #s "gnome-keyring-daemon" "--start --components=secrets"
+    #s "gnome-settings-daemon-helper"
+    #s "pamusb-agent"
+
+    # panel stuff
+    s "lxpanel" "-p Lubuntu"
+    s "nm-applet"
+    s "xfce4-power-manager" # use xfce4-power-manager-settings to configure
+    s "bluetooth-applet"
+    #s "gnome-volume-control-applet"
+    #s "stalonetray" 
+
+    #s "system-config-printer-applet"
+    #s "update-notifier"
+    #s "xbindkeys"
+    ;;
+esac
+
