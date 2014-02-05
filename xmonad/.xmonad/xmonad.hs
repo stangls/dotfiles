@@ -2,7 +2,7 @@
 
   by Stefan Dangl
   designed for
-  * NEO2 german keybord layout
+  * NEO2 german keyboard layout
   * lubuntu with lxde (and stuff like lxpanel and nm-applet)
 
   mod = super
