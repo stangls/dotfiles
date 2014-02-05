@@ -4,34 +4,47 @@
   designed for
   * NEO2 german keyboard layout
   * lubuntu with lxde (and stuff like lxpanel and nm-applet)
+  * me! ;)
+  feel free to adapt to your needs and redistribute
+
+  default keys stayed the same, they have not been remapped to neo2.
+  the thinking behind that decision, is that ctrl-v and ctrl+c and
+  ctrl-x are also not mapped to the same positon as well as vim-keys
+  and other stuff. (i typically only remap keys for games)
 
   mod = super
 
   additional keys
-    mod+shift         toggle fullscreen for current app
+    mod+f or mod+v    toggle fullscreen for current app
     mod+b             toggle borders
-    mod+arrows        go
-    mod+shift+arrows  move
+    mod+arrows        move focus
+    mod+shift+arrows  move window
+    mod+j             next focus (default)
+    mod+d             previous focus (in addition to default mod+k)
     mod+c             close (kill) window
     mod+i             decrease vertical size (tiled)
     mod+ö             increase vertical size (tiled)
-    mod+x             mirror (tiled layout)
+    mod+x             mirror layout (does not work with all, e.g. tabbed)
 
     mod+shift+l       lock (using "xscreensaver-command -lock")
-    mod+u             volume up
-    mod+ü             volume down
+    mod+u             volume up (amixer)
+    mod+ü             volume down (amixer)
 
-    mod+s             toggle struts
+    mod+s             toggle struts (e.g. xmobarr)
     mod+.             minimize
     mod+shift+.       unminimize
 
   layouts
-    tall ( master-pane left, use mod+x to mirror )
+    onebig ( master-pane top-left )
+    tall ( master-pane left )
     grids with zoom
-    fullscreen (for games, videos, etc)
+    tabbed (somehow i never use this one)
 
   HINT: use the following command to disable mod4+p in gnome-settings which switches the monitor:
         gconftool -t bool -s /apps/gnome_settings_daemon/plugins/xrandr false
+  HINT: see .xmobarr config file
+  HINT: use dmenu with yeganesh script, install yeganesh with
+    cabal install yeganesh
 
 -}
 import System.IO
