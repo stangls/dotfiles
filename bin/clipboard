@@ -1,0 +1,56 @@
+#!/bin/bash
+
+doOutput=true;
+inGiven=false;
+doInput=true;
+
+# option-parameters
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h | --help | -help )
+      echo 'easy access to typical x-server clipboard (depends on xclip)'
+      echo 'outputs contents of clipboard.'
+      echo 'reads new contents from stdin unless -n or input argument is given.'
+      echo 'this way you can easily pipe contents to this script'
+      echo
+      echo 'clipoard [args] [--] [in]'
+      echo 'args can be:'
+      echo '  -h -help --help                    display this help (and exit)'
+      echo '  -q --quiet -quiet                  do not output current contents of clipboard'
+      echo '  -n --noput -noput -g --get -get    do not put contents into clipboard'
+      exit 0 ;;
+    -q | --quiet | -quiet )
+      doOutput=false
+      shift ;;
+    -n | --noput | -noput | -get | --get )
+      doInput=false
+      shift ;;
+    -- ) # Stop option prcessing
+      shift
+      break ;;
+    * )
+      break ;;
+  esac
+done
+
+# parameter: in
+if [ $# -gt 0 ]; then
+  inGiven=true
+  in="$1"
+fi
+
+# output contents of clipboard
+if $doOutput; then
+  xclip -o -selection clipboard
+fi
+
+# input contents into clipboard
+if $doInput; then
+  if ! "$inGiven" ; then
+    read in
+  fi
+  if [ "$in" != "" ]; then
+    echo "$in" | xclip -selection clipboard
+  fi
+fi
+
