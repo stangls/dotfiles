@@ -8,4 +8,4 @@ fi
 echo -n "Watt: "; echo `cat /sys/bus/acpi/drivers/battery/*/power_supply/*/power_now` / 1000000 | bc -l; 
 sdxState.sh
 echo ""
-optirun --status
+[ -n "`which optirun`" ] && optirun --status
