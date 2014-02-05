@@ -48,8 +48,7 @@
 
 -}
 import System.IO
-import System.Exit
-import qualified Data.Map as M
+--import qualified Data.Map as M
 
 import XMonad
 import XMonad.Hooks.DynamicLog
@@ -101,10 +100,11 @@ layout =
   )
   
   where
-    onebig  = mkToggle ( MIRROR ?? NOBORDERS ?? NBFULL ?? EOT ) $ named "onebig" ( (OneBig (2/3) (2/3)))
-    tiled   = mkToggle ( MIRROR ?? EOT ) $ mkToggle ( NOBORDERS ?? EOT ) $ mkToggle ( NBFULL ?? EOT ) $ named "tiled" (smartBorders (ResizableTall 1 (3/100) (2/3) [] ))
-    zgrid   = mkToggle ( MIRROR ?? NOBORDERS ?? NBFULL ?? EOT ) $ named "zgrid" (magnifiercz 1.3 ( GridRatio (4/3)))
-    full    = mkToggle ( MIRROR ?? NOBORDERS ?? NBFULL ?? EOT ) $ named "full" (noBorders ( fullscreenFull Full ))
+    toggler x = mkToggle ( MIRROR ?? EOT ) $ mkToggle ( NOBORDERS ?? EOT ) $ mkToggle ( NBFULL ?? EOT ) $ x
+    onebig  = toggler $ named "onebig" ( (OneBig (2/3) (2/3)))
+    tiled   = toggler $ named "tiled" (smartBorders (ResizableTall 1 (3/100) (2/3) [] ))
+    zgrid   = toggler $ named "zgrid" (magnifiercz 1.3 ( GridRatio (4/3)))
+    full    = toggler $ named "full" (noBorders ( fullscreenFull Full ))
 
 -- keys "customKeys"
 delkeys :: XConfig l -> [(KeyMask, KeySym)]
