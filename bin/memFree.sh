@@ -1,0 +1,1 @@
+echo $((($(sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/    p" /proc/meminfo)+$(sed -nu "s/^Cached:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo)+$(sed -nu "s/^Buffers:[\t ]    \+\([0-9]\+\) kB/\1/p" /proc/meminfo))/1024))

@@ -1,0 +1,27 @@
+
+Config { font = "-Misc-Fixed-Medium-R-SemiCondensed--13-120-75-75-C-60-ISO8859-1"
+       , bgColor = "black"
+       , fgColor = "gray"
+       , position = TopW L 86
+       , lowerOnStart = True
+       , commands = [
+          --  Run Weather "EDDF" ["-t","C","-L","3","-H","25","--normal","green","--high","red","--low","lightblue"] 3600
+            Run Cpu [
+                "-L","10","-H","50","--normal","green","--high","red",
+                "-t","<bar> <total>"
+              ] 10
+            , Run Swap [ "-t", "<usedratio>%swp"] 10
+          , Run BatteryP ["BAT1"] [
+              "-t","<left>% <timeleft>",
+              "-L","20","-H","50","--high","gray","--normal","yellow", "--low", "red",
+              "--", "-c", "energy_full"
+            ] 10
+      , Run Thermal "THM0" ["-t","C","-L","60","-H","70","-l","gray","-n","yellow","-h","red"] 50
+                    , Run Date "%d. %b %H:%M:%S" "date" 10
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %cpu% %cut -d' ' -f 1-3 /proc/loadavg%   %memFree.sh%MB %swap%   %battery%   %temperatureAndFan.sh%   %date%  "
+       }
+
