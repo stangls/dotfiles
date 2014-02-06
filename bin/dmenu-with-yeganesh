@@ -3,19 +3,24 @@
 # Script to launch dmenu with colors matching IR_Black theme
 # to use for exapmle with xmonad
 # * executes stuff typed
-# * put an additional "!" at the end of the line to execute in a lxterminal with read line at the end.
-# * put an additional "." at the end of the line to execute in a lxterminal with
-# http://github.com/vicfryzel/xmonad-config
+# * put an additional "!" at the end of the line to execute in a lxterminal with bash, and a read line at the end.
+# * put an additional "." at the end of the line to execute in a lxterminal with bash
+# copied in parts from http://github.com/vicfryzel/xmonad-config
+#
+# todo:
+# * actually care about escaping
+# * actually care about the possibility of bash commands containing full stops and exclamation marks (hmm, maybe my approach is stupid?)
+# * allow sth else than bash (zsh, etc.)
 
 todo=$(dmenu_path | sed 's/^.*$/\0\n\0!\n\0./' | ~/.cabal/bin/yeganesh -- -nb '#000000' -nf '#FFFFFF' -sb '#7C7C7C' -sf '#CEFFAC')
 if echo "$todo" | grep -qe '!$'; then
   todo=$(echo "$todo" | sed 's/!$//')
   echo lxterminal -e "$todo"
-  lxterminal -e "/bin/bash -c '$todo;read line -s'"
+  lxterminal -e "/bin/bash -c 'echo $todo;$todo;read line -s'"
 elif echo "$todo" | grep -qe '\.$'; then
   todo=$(echo "$todo" | sed 's/.$//')
   echo lxterminal -e "$todo"
-  lxterminal -e "/bin/bash -c '$todo'"
+  lxterminal -e "/bin/bash -c 'echo $todo;$todo'"
 else
   echo "$todo"
   echo "$todo" | /bin/bash
