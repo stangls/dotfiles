@@ -34,6 +34,8 @@
     mod+.             minimize
     mod+shift+.       unminimize
 
+    mod+ctrl+$        swap current workspace with workspace $
+
   layouts
     onebig ( master-pane top-left )
     tall ( master-pane left )
@@ -78,9 +80,12 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Named
 
-import XMonad.Actions.UpdatePointer
+--import XMonad.Actions.UpdatePointer
+import XMonad.Actions.SwapWorkspaces
+
 import XMonad.Util.CustomKeys
 import Graphics.X11.ExtraTypes.XorgDefault
+
 
 
 --import XMonad.Prompt
@@ -140,6 +145,9 @@ inskeys conf@(XConfig {modMask = modm}) = [
     , ((modm, xK_d), focusUp)
     , ((modm, xK_m), focusMaster)
     , ((modm, xK_p), spawn "dmenu-with-yeganesh")
+  ]
+  ++ [
+    ((modm .|. controlMask, k), windows $ swapWithCurrent i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
   ]
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
