@@ -56,9 +56,12 @@ import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.Script
 import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.EZConfig
+
 --import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.Place
 
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
@@ -82,6 +85,7 @@ import XMonad.Layout.Named
 
 --import XMonad.Actions.UpdatePointer
 import XMonad.Actions.SwapWorkspaces
+import qualified XMonad.Actions.FlexibleResize as Flex
 
 import XMonad.Util.CustomKeys
 import Graphics.X11.ExtraTypes.XorgDefault
@@ -163,8 +167,11 @@ inskeys conf@(XConfig {modMask = modm}) = [
 -- 'className' and 'resource' are used below.
 --
 --
-myManageHook = composeAll
-   [
+myManageHook =
+  placeHook (withGaps (16,0,16,0) (smart (0.5,0.5)))
+  <+>
+  composeAll
+  [
    className =? "lxpanel"  --> doIgnore
 -- , className =? "stalonetray"  --> doIgnore
 -- , resource  =? "desktop_window"  --> doIgnore
@@ -190,8 +197,8 @@ myManageHook = composeAll
 
 -- main
 --main = xmonad =<< xmobar defaultConfig {
-main = do
-  xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmobarrc"
+main =
+  spawnPipe "/usr/bin/xmobar ~/.xmobarrc" >>= \xmproc ->
   xmonad $ defaultConfig {
     borderWidth         = 2
   , terminal            = "lxterminal"
@@ -212,6 +219,7 @@ main = do
   , modMask             = mod4Mask
   , keys                = customKeys delkeys inskeys
   }
- 
-
+  `additionalMouseBindings`
+  [ ((mod4Mask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+  ]
 
