@@ -42,6 +42,11 @@
     grids with zoom
     tabbed (somehow i never use this one)
 
+  mouse bindings
+    mod+mouse3        resize from all edges
+    mouse10           toggle fullscreen
+    mouse8 & 9        next/prev WS
+
   HINT: use the following command to disable mod4+p in gnome-settings which switches the monitor:
         gconftool -t bool -s /apps/gnome_settings_daemon/plugins/xrandr false
   HINT: see .xmobarr config file
@@ -86,6 +91,7 @@ import XMonad.Layout.Named
 --import XMonad.Actions.UpdatePointer
 import XMonad.Actions.SwapWorkspaces
 import qualified XMonad.Actions.FlexibleResize as Flex
+import XMonad.Actions.CycleWS
 
 import XMonad.Util.CustomKeys
 import Graphics.X11.ExtraTypes.XorgDefault
@@ -96,8 +102,8 @@ import Graphics.X11.ExtraTypes.XorgDefault
 --import XMonad.Prompt.Shell
 --import XMonad.Prompt.XMonad
 
+myModMask = mod4Mask
 
--- fullscreenfull seems to do nothing?
 -- layout hook
 layout =
   nameTail $ layoutHintsWithPlacement (0.5,0.5) $ boringWindows $ nameTail $ minimize (
@@ -152,6 +158,25 @@ inskeys conf@(XConfig {modMask = modm}) = [
   ]
   ++ [
     ((modm .|. controlMask, k), windows $ swapWithCurrent i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+  ]
+
+-- mouse bindings
+button6     =  6 :: Button
+button7     =  7 :: Button
+button8     =  8 :: Button
+button9     =  9 :: Button
+button10    = 10 :: Button
+button11    = 11 :: Button
+button12    = 12 :: Button
+button13    = 13 :: Button
+button14    = 14 :: Button
+button15    = 15 :: Button
+
+myMouseBindings=
+  [ ((myModMask , button3  ), (\w -> focus w >> Flex.mouseResizeWindow w))
+  , ((0         , button8  ), (\w -> nextWS ))
+  , ((0         , button9  ), (\w -> prevWS ))
+  , ((0         , button10 ), (\w -> sendMessage $ MT.Toggle NBFULL) ) -- todo : introduce focus w
   ]
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -216,10 +241,8 @@ main =
       execScriptHook "startup"
   , manageHook          = myManageHook
   , handleEventHook     = docksEventHook
-  , modMask             = mod4Mask
+  , modMask             = myModMask
   , keys                = customKeys delkeys inskeys
   }
-  `additionalMouseBindings`
-  [ ((mod4Mask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
-  ]
+  `additionalMouseBindings` myMouseBindings
 
