@@ -15,12 +15,10 @@
 todo=$(dmenu_path | sed 's/^.*$/\0\n\0!\n\0./' | ~/.cabal/bin/yeganesh -- -nb '#000000' -nf '#FFFFFF' -sb '#7C7C7C' -sf '#CEFFAC')
 if echo "$todo" | grep -qe '!$'; then
   todo=$(echo "$todo" | sed 's/!$//')
-  echo x-terminal-emulator -e "$todo"
-  x-terminal-emulator -e "/bin/bash -c 'echo $todo;$todo;read line -s'"
+  x-terminal-emulator -e "/bin/bash -c 'echo "$todo";$todo;read line -s'"
 elif echo "$todo" | grep -qe '\.$'; then
   todo=$(echo "$todo" | sed 's/.$//')
-  echo x-terminal-emulator -e "$todo"
-  x-terminal-emulator -e "/bin/bash -c 'echo $todo;$todo'"
+  x-terminal-emulator -e "/bin/bash -c 'echo "$todo";$todo'"
 else
   echo "$todo"
   echo "$todo" | /bin/bash

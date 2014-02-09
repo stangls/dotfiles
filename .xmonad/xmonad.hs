@@ -58,6 +58,7 @@ import System.IO
 --import qualified Data.Map as M
 
 import XMonad
+import qualified XMonad.StackSet as StS
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.Script
 import XMonad.Util.Run(spawnPipe)
@@ -106,12 +107,11 @@ myModMask = mod4Mask
 
 -- layout hook
 layout =
-  nameTail $ layoutHintsWithPlacement (0.5,0.5) $ boringWindows $ nameTail $ minimize (
-    avoidStruts ( windowNavigation (
-         onebig ||| tiled ||| zgrid
-      )
-      ||| named "tabs" ( noBorders ( tabbed shrinkText defaultTheme ) )
+  nameTail $ layoutHintsWithPlacement (0.5,0.5) $ boringWindows $ nameTail $ minimize $ avoidStruts (
+    windowNavigation (
+      onebig ||| tiled ||| zgrid
     )
+    ||| tabs
   )
   
   where
@@ -120,6 +120,8 @@ layout =
     tiled   = toggler $ named "tiled" (smartBorders (ResizableTall 1 (3/100) (2/3) [] ))
     zgrid   = toggler $ named "zgrid" (magnifiercz 1.3 ( GridRatio (4/3)))
     full    = toggler $ named "full" (noBorders ( fullscreenFull Full ))
+    draggy  = named "draggy" $ toggler $ dragPane Vertical 10 0.5
+    tabs    = named "tabs" $ noBorders $ tabbed shrinkText defaultTheme
 
 -- keys "customKeys"
 delkeys :: XConfig l -> [(KeyMask, KeySym)]
@@ -151,10 +153,11 @@ inskeys conf@(XConfig {modMask = modm}) = [
     , ((modm,               xK_s            ), sendMessage ToggleStruts)
     , ((modm,               xK_period       ), withFocused minimizeWindow)
     , ((modm .|. shiftMask, xK_period       ), sendMessage RestoreNextMinimizedWin)
-    , ((modm, xK_j), focusDown)
-    , ((modm, xK_d), focusUp)
-    , ((modm, xK_m), focusMaster)
-    , ((modm, xK_p), spawn "dmenu-with-yeganesh")
+    , ((modm              , xK_j), focusDown)
+    , ((modm              , xK_d), focusUp)
+    , ((modm .|. shiftMask, xK_d), windows StS.swapUp)
+    , ((modm              , xK_m), focusMaster)
+    , ((modm              , xK_p), spawn "dmenu-with-yeganesh")
   ]
   ++ [
     ((modm .|. controlMask, k), windows $ swapWithCurrent i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
