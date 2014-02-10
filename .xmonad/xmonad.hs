@@ -120,7 +120,6 @@ layout =
     tiled   = toggler $ named "tiled" (smartBorders (ResizableTall 1 (3/100) (2/3) [] ))
     zgrid   = toggler $ named "zgrid" (magnifiercz 1.3 ( GridRatio (4/3)))
     full    = toggler $ named "full" (noBorders ( fullscreenFull Full ))
-    draggy  = named "draggy" $ toggler $ dragPane Vertical 10 0.5
     tabs    = named "tabs" $ noBorders $ tabbed shrinkText defaultTheme
 
 -- keys "customKeys"
@@ -246,6 +245,7 @@ main =
   , handleEventHook     = docksEventHook
   , modMask             = myModMask
   , keys                = customKeys delkeys inskeys
+  , focusFollowsMouse   = False
   }
   `additionalMouseBindings` myMouseBindings
 
