@@ -77,7 +77,6 @@ import XMonad.Layout.Grid
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.MultiToggle as MT
 import XMonad.Layout.MultiToggle.Instances
---import XMonad.Layout.Circle
 import XMonad.Hooks.FadeInactive
 import XMonad.Layout.MouseResizableTile
 import XMonad.Layout.OneBig
@@ -89,15 +88,12 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Named
 
---import XMonad.Actions.UpdatePointer
 import XMonad.Actions.SwapWorkspaces
 import qualified XMonad.Actions.FlexibleResize as Flex
 import XMonad.Actions.CycleWS
 
 import XMonad.Util.CustomKeys
 import Graphics.X11.ExtraTypes.XorgDefault
-
-
 
 --import XMonad.Prompt
 --import XMonad.Prompt.Shell
@@ -162,7 +158,7 @@ inskeys conf@(XConfig {modMask = modm}) = [
     ((modm .|. controlMask, k), windows $ swapWithCurrent i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
   ]
 
--- mouse bindings
+-- more mouse buttons
 button6     =  6 :: Button
 button7     =  7 :: Button
 button8     =  8 :: Button
@@ -174,11 +170,12 @@ button13    = 13 :: Button
 button14    = 14 :: Button
 button15    = 15 :: Button
 
+-- mouse bindings
 myMouseBindings=
-  [ ((myModMask , button3  ), (\w -> focus w >> Flex.mouseResizeWindow w))
+  [ ((myModMask , button3  ), (\w -> do focus w ; Flex.mouseResizeWindow w))
   , ((0         , button8  ), (\w -> nextWS ))
   , ((0         , button9  ), (\w -> prevWS ))
-  , ((0         , button10 ), (\w -> sendMessage $ MT.Toggle NBFULL) ) -- todo : introduce focus w
+  , ((0         , button10 ), (\w -> do focus w ; sendMessage $ MT.Toggle NBFULL ) )
   ]
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -200,6 +197,8 @@ myManageHook =
   composeAll
   [
    className =? "lxpanel"  --> doIgnore
+
+   -- for later use
 -- , className =? "stalonetray"  --> doIgnore
 -- , resource  =? "desktop_window"  --> doIgnore
 -- , resource  =? "kdesktop"  --> doIgnore
@@ -219,11 +218,9 @@ myManageHook =
 -- , className =? "Thunderbird"  --> doShift "2"
 -- , className =? "Pidgin"   --> doShift "3"
 
-
   ] <+> manageDocks <+> manageHook defaultConfig
 
 -- main
---main = xmonad =<< xmobar defaultConfig {
 main =
   spawnPipe "/usr/bin/xmobar ~/.xmobarrc" >>= \xmproc ->
   xmonad $ defaultConfig {
